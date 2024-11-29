@@ -1,0 +1,81 @@
+row:
+   rowIndex:
+      to_subject: patient
+transformers:
+    - map:
+        columns:
+            - Patient
+        to_property:
+            - name
+        for_object: 
+            - patient
+    - map:
+        columns: 
+            - bmi
+        to_property:
+            - bmi
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - stage
+        to_property:
+            - stage
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - treatment
+        to_property:
+            - treatment
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - chemotherapy_cycles
+        to_property:
+            - chemotherapy_cycles
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - maintenance
+        to_property:
+            - maintenance
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - parpi
+        to_property:
+            - parpi
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - primary_outcome
+        to_property:
+            - primary_outcome
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - brca_mutation
+        to_property:
+            - brca_mutation
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - hr_deficient
+        to_property:
+            - hr_deficient
+        for_object:
+            - patient
+    - map:
+        columns: 
+            - severe_adverse_reaction_to
+        to_property:
+            - severe_adverse_reaction_to
+        for_object:
+            - patient

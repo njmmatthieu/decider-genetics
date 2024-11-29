@@ -4,6 +4,7 @@ import logging
 import pandas as pd
 
 from biocypher import BioCypher
+import decider_genetics.adapters.preprocessing_adapters as preprocess
 import ontoweaver
 
 if __name__ == "__main__":
@@ -50,8 +51,10 @@ if __name__ == "__main__":
     # Extract from databases not requiring preprocessing.
     if asked.synthetic_clinical:
         logging.info(f"Weave synthetic clinical data...")
-        for file_path in asked.synthetic_clinical:
-            data_mappings[file_path] =  "./decider_genetics/adapters/clinical.yaml"
+        n, e = ontoweaver.extract_all(bc, asked.synthetic_clinical, preprocess.Clinical , "./decider_genetics/adapters/clinical.yaml")
+        nodes += n
+        edges += e
+        logging.info(f"Wove Clinical: {len(n)} nodes, {len(e)} edges.")
 
     if asked.synthetic_cns:
         logging.info(f"Weave synthetic copy number alterations data")
