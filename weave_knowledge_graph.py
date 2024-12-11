@@ -2,9 +2,10 @@
 import argparse
 import logging
 import pandas as pd
+import yaml
 
 from biocypher import BioCypher
-import decider_genetics.adapters.preprocessing_adapters as preprocess
+import decider_genetics.adapters.preprocessing_dataframes as preprocess
 import ontoweaver
 
 if __name__ == "__main__":
@@ -51,10 +52,22 @@ if __name__ == "__main__":
     # Extract from databases not requiring preprocessing.
     if asked.synthetic_clinical:
         logging.info(f"Weave synthetic clinical data...")
-        n, e = ontoweaver.extract_all(bc, asked.synthetic_clinical, preprocess.Clinical , "./decider_genetics/adapters/clinical.yaml")
-        nodes += n
-        edges += e
-        logging.info(f"Wove Clinical: {len(n)} nodes, {len(e)} edges.")
+        
+        clinical_df = pd.read_csv(asked.synthetic_clinical[0], sep=';')
+        preprocessed_clinical_data = preprocess.preprocess_clinical(clinical_df)
+
+        mapping_file = "./decider_genetics/adapters/clinical.yaml"
+        with open(mapping_file) as fd:
+            conf = yaml.full_load(fd)
+
+        print(conf)
+
+        adapter = ontoweaver.tabular.extract_all(df=preprocessed_clinical_data, config=conf,separator = None, affix= "none")
+
+        nodes += adapter.nodes
+        edges += adapter.edges
+
+        logging.info(f"Wove Clinical: {len(nodes)} nodes, {len(edges)} edges.")
 
     if asked.synthetic_cns:
         logging.info(f"Weave synthetic copy number alterations data")
@@ -71,10 +84,10 @@ if __name__ == "__main__":
         for file_path in asked.oncokb:
             data_mappings[file_path] =  "./decider_genetics/adapters/oncokb.yaml"
 
-    # Write everything.
-    n, e = ontoweaver.extract(data_mappings)
-    nodes += n
-    edges += e
+    # # Write everything.
+    # n, e = ontoweaver.extract(data_mappings)
+    # nodes += n
+    # edges += e
 
     import_file = ontoweaver.reconciliate_write(nodes, edges, "config/biocypher_config.yaml", "config/schema_config.yaml", separator=", ")
 

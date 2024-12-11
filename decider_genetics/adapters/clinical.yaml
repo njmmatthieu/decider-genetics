@@ -1,13 +1,22 @@
 row:
-   rowIndex:
-      to_subject: patient
+    map:
+        columns: 
+            - patient
+        to_subject: patient
 transformers:
     - map:
         columns:
-            - Patient
+            - patient
         to_property:
             - name
         for_object: 
+            - patient
+    - map:
+        columns: 
+            - age
+        to_property:
+            - age
+        for_object:
             - patient
     - map:
         columns: 
