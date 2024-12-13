@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import random
 
@@ -46,7 +47,7 @@ def preprocess_clinical(df):
         if random.random() < 0.2:
             return random.choice(drugs)
         else:
-            return None
+            return np.nan
 
     df['severe_adverse_reaction_to']= [generate_row(drugs) for _ in range(df.shape[0])]
 
