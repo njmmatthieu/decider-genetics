@@ -1,0 +1,112 @@
+row:
+   rowIndex:
+      to_subject: copy_number_variant
+transformers:
+    - map:
+        columns:
+            - sample
+        to_object: patient
+        via_relation: patient_has_copy_number_variant
+    - map:
+        columns:
+            - Gene
+        to_object: gene
+        via_relation: copy_number_variant_in_gene 
+    - map:
+        columns:
+            - nMajor
+        to_property:
+            - nMajor
+        for_object: 
+            - copy_number_variant
+    - map:
+        columns: 
+            - nMinor
+        to_property:
+            - nMinor
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - purifiedLogR
+        to_property:
+            - purifiedLogR
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - purifiedBaf
+        to_property:
+            - purifiedBaf
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - purifiedLoh
+        to_property:
+            - purifiedLoh
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - minPurifiedLogR
+        to_property:
+            - minPurifiedLogR
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - maxPurifiedLogR
+        to_property:
+            - maxPurifiedLogR
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - breaksInGene
+        to_property:
+            - breaksInGene
+        for_object:
+            - copy_number_variant
+    - map:
+        columns: 
+            - chr
+        to_property:
+            - chr
+        for_object:
+            - gene
+    - map:
+        columns: 
+            - start
+        to_property:
+            - start
+        for_object:
+            - gene
+    - map:
+        columns: 
+            - end
+        to_property:
+            - end
+        for_object:
+            - gene
+    - map:
+        columns: 
+            - strand
+        to_property:
+            - strand
+        for_object:
+            - gene
+    - map:
+        columns: 
+            - band
+        to_property:
+            - band
+        for_object:
+            - gene
+    - map:
+        columns: 
+            - type
+        to_property:
+            - type
+        for_object:
+            - gene

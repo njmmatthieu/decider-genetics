@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument("-cli", "--synthetic_clinical", metavar="CSV", nargs="+",
                         help="Extract from the synthetic clinical CSV file.")
 
-    parser.add_argument("-cna", "--synthetic_cns", metavar="CSV", nargs="+",
+    parser.add_argument("-cna", "--synthetic_cna", metavar="CSV", nargs="+",
                         help="Extract from the synthetic copy number alterations CSV file.")
 
     parser.add_argument("-snv", "--synthetic_variants", metavar="CSV", nargs="+",
@@ -60,8 +60,6 @@ if __name__ == "__main__":
         with open(mapping_file) as fd:
             conf = yaml.full_load(fd)
 
-        print(conf)
-
         adapter = ontoweaver.tabular.extract_all(df=preprocessed_clinical_data, config=conf,separator = None, affix= "none")
 
         nodes += adapter.nodes
@@ -69,10 +67,23 @@ if __name__ == "__main__":
 
         logging.info(f"Wove Clinical: {len(nodes)} nodes, {len(edges)} edges.")
 
-    if asked.synthetic_cns:
+    if asked.synthetic_cna:
         logging.info(f"Weave synthetic copy number alterations data")
-        for file_path in asked.synthetic_cns:
-            data_mappings[file_path] =  "./decider_genetics/adapters/cn_genes.yaml"
+        
+        cna_df = pd.read_csv(asked.synthetic_cna[0], sep='\t')
+
+        mapping_file = "./decider_genetics/adapters/cna_genes.yaml"
+        with open(mapping_file) as fd:
+            conf = yaml.full_load(fd)
+
+        print(conf)
+
+        adapter = ontoweaver.tabular.extract_all(df=cna_df, config=conf,separator = None, affix= "none")
+
+        nodes += adapter.nodes
+        edges += adapter.edges
+
+        logging.info(f"Wove Clinical: {len(nodes)} nodes, {len(edges)} edges.")
 
     if asked.synthetic_variants:
         logging.info(f"Weave synthetic single nucleotide variants data")
@@ -90,5 +101,6 @@ if __name__ == "__main__":
     # edges += e
 
     import_file = ontoweaver.reconciliate_write(nodes, edges, "config/biocypher_config.yaml", "config/schema_config.yaml", separator=", ")
+    # bc.write_schema_info(as_node=True)
 
     print(import_file)
