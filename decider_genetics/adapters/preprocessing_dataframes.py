@@ -134,4 +134,34 @@ def preprocess_cna(df):
     #     axis=1,
     # )
 
-    return(df)
+    return df
+
+def preprocess_oncokb(df):
+
+        # explode the "Drugs (for therapeutic implications only)" column
+    df = df.assign(
+        **{
+            "Drugs (for therapeutic implications only)": df[
+                "Drugs (for therapeutic implications only)"
+            ].str.split(", ")
+        }
+    ).explode("Drugs (for therapeutic implications only)")
+
+    # explode the "Alterations" column
+    df = df.assign(
+        **{"Alterations": df["Alterations"].str.split(", ")}
+    ).explode("Alterations")
+
+    # explode the "Cancer Types" column
+    df = df.assign(
+        **{"Cancer Types": df["Cancer Types"].str.split(", ")}
+    ).explode("Cancer Types")
+
+    # remove drugs that are not strings
+    df = df[
+        df["Drugs (for therapeutic implications only)"].apply(
+            lambda x: isinstance(x, str)
+        )
+    ]
+
+    return df

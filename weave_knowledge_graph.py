@@ -104,8 +104,19 @@ if __name__ == "__main__":
     
     if asked.oncokb:
         logging.info(f"Weave OncoKB data...")
-        for file_path in asked.oncokb:
-            data_mappings[file_path] =  "./decider_genetics/adapters/oncokb.yaml"
+        oncokb_df = pd.read_csv(asked.oncokb[0], sep='\t')
+        preprocessed_oncokb_df = preprocess_df.preprocess_oncokb(oncokb_df)
+
+        mapping_file = "./decider_genetics/adapters/oncokb.yaml"
+        with open(mapping_file) as fd:
+            conf = yaml.full_load(fd)
+
+        adapter = ontoweaver.tabular.extract_all(df=preprocessed_oncokb_df, config=conf,separator = None, affix= "none")
+
+        nodes += adapter.nodes
+        edges += adapter.edges
+
+        logging.info(f"Wove OncoKB: {len(nodes)} nodes, {len(edges)} edges.")
 
     # # Write everything.
     # n, e = ontoweaver.extract(data_mappings)

@@ -1,0 +1,39 @@
+row:
+    map:
+        columns:
+            - Drugs (for therapeutic implications only)  
+        to_subject: drug
+transformers:
+    - map:
+        columns:
+            - Gene
+        to_object: drug
+        via_relation: potentially_druggable
+    - map:
+        columns: 
+            - Drugs (for therapeutic implications only)
+        to_property:
+            - name
+        for_object:
+            - drug
+    - map:
+        columns: 
+            - Level
+        to_property:
+            - level
+        for_object:
+            - potentially_druggable
+    - map:
+        columns: 
+            - Alterations
+        to_property:
+            - alteration
+        for_object:
+            - potentially_druggable
+    - map:
+        columns: 
+            - Cancer Types
+        to_property:
+            - cancer_type
+        for_object:
+            - potentially_druggable
