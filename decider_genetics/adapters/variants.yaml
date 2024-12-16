@@ -1,0 +1,79 @@
+row:
+    map:
+        columns:
+            - ID  
+        to_subject: variant
+transformers:
+    - map:
+        columns:
+            - patient
+        to_object: patient
+        via_relation: patient_has_variant
+    - map:
+        columns:
+            - Gene.MANE
+        to_object: gene
+        via_relation: variant_in_gene 
+    - map:
+        columns:
+            - CHROM
+        to_property:
+            - CHROM
+        for_object: 
+            - variant
+    - map:
+        columns: 
+            - POS
+        to_property:
+            - POS
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - REF
+        to_property:
+            - REF
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - ALT
+        to_property:
+            - ALT
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - Gene.MANE
+        to_property:
+            - Gene.MANE
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - CADD_phred
+        to_property:
+            - CADD_phred
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - AAChange.MANE
+        to_property:
+            - AAChange.MANE
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - COSMIC_TOTAL_OCC
+        to_property:
+            - COSMIC_TOTAL_OCC
+        for_object:
+            - variant
+    - map:
+        columns: 
+            - CLNSIG
+        to_property:
+            - CLNSIG
+        for_object:
+            - variant

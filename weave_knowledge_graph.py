@@ -5,7 +5,8 @@ import pandas as pd
 import yaml
 
 from biocypher import BioCypher
-import decider_genetics.adapters.preprocessing_dataframes as preprocess
+import decider_genetics.adapters.preprocessing_dataframes as preprocess_df
+import decider_genetics.adapters.preprocessing_variants as preprocess_snv
 import ontoweaver
 
 if __name__ == "__main__":
@@ -54,7 +55,7 @@ if __name__ == "__main__":
         logging.info(f"Weave synthetic clinical data...")
         
         clinical_df = pd.read_csv(asked.synthetic_clinical[0], sep=';')
-        preprocessed_clinical_df = preprocess.preprocess_clinical(clinical_df)
+        preprocessed_clinical_df = preprocess_df.preprocess_clinical(clinical_df)
 
         mapping_file = "./decider_genetics/adapters/clinical.yaml"
         with open(mapping_file) as fd:
@@ -71,7 +72,7 @@ if __name__ == "__main__":
         logging.info(f"Weave synthetic copy number alterations data")
         
         cna_df = pd.read_csv(asked.synthetic_cna[0], sep='\t')
-        preprocessed_cna_df = preprocess.preprocess_cna(cna_df)
+        preprocessed_cna_df = preprocess_df.preprocess_cna(cna_df)
 
         mapping_file = "./decider_genetics/adapters/cna_genes.yaml"
         with open(mapping_file) as fd:
@@ -82,12 +83,24 @@ if __name__ == "__main__":
         nodes += adapter.nodes
         edges += adapter.edges
 
-        logging.info(f"Wove Clinical: {len(nodes)} nodes, {len(edges)} edges.")
+        logging.info(f"Wove CNAs: {len(nodes)} nodes, {len(edges)} edges.")
 
     if asked.synthetic_variants:
-        logging.info(f"Weave synthetic single nucleotide variants data")
-        for file_path in asked.synthetic_variants:
-            data_mappings[file_path] = "./decider_genetics/adapters/all_variants.yaml"
+        logging.info(f"Weave synthetic variants data")
+
+        variants_df = pd.read_csv(asked.synthetic_variants[0], sep='\t')
+        preprocessed_variants_df = preprocess_snv.preprocess_variants(variants_df)
+
+        mapping_file = "./decider_genetics/adapters/variants.yaml"
+        with open(mapping_file) as fd:
+            conf = yaml.full_load(fd)
+
+        adapter = ontoweaver.tabular.extract_all(df=preprocessed_variants_df, config=conf,separator = None, affix= "none")
+
+        nodes += adapter.nodes
+        edges += adapter.edges
+
+        logging.info(f"Wove variants: {len(nodes)} nodes, {len(edges)} edges.")
     
     if asked.oncokb:
         logging.info(f"Weave OncoKB data...")
