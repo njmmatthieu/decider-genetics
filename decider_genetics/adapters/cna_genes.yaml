@@ -1,6 +1,8 @@
 row:
-   rowIndex:
-      to_subject: copy_number_variant
+    map:
+        columns:
+            - VARIANT_ID  
+        to_subject: copy_number_variant
 transformers:
     - map:
         columns:
@@ -108,5 +110,12 @@ transformers:
             - type
         to_property:
             - type
+        for_object:
+            - gene
+    - map:
+        columns: 
+            - Gene
+        to_property:
+            - name
         for_object:
             - gene

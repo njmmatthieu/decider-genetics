@@ -54,13 +54,13 @@ if __name__ == "__main__":
         logging.info(f"Weave synthetic clinical data...")
         
         clinical_df = pd.read_csv(asked.synthetic_clinical[0], sep=';')
-        preprocessed_clinical_data = preprocess.preprocess_clinical(clinical_df)
+        preprocessed_clinical_df = preprocess.preprocess_clinical(clinical_df)
 
         mapping_file = "./decider_genetics/adapters/clinical.yaml"
         with open(mapping_file) as fd:
             conf = yaml.full_load(fd)
 
-        adapter = ontoweaver.tabular.extract_all(df=preprocessed_clinical_data, config=conf,separator = None, affix= "none")
+        adapter = ontoweaver.tabular.extract_all(df=preprocessed_clinical_df, config=conf,separator = None, affix= "none")
 
         nodes += adapter.nodes
         edges += adapter.edges
@@ -71,14 +71,13 @@ if __name__ == "__main__":
         logging.info(f"Weave synthetic copy number alterations data")
         
         cna_df = pd.read_csv(asked.synthetic_cna[0], sep='\t')
+        preprocessed_cna_df = preprocess.preprocess_cna(cna_df)
 
         mapping_file = "./decider_genetics/adapters/cna_genes.yaml"
         with open(mapping_file) as fd:
             conf = yaml.full_load(fd)
 
-        print(conf)
-
-        adapter = ontoweaver.tabular.extract_all(df=cna_df, config=conf,separator = None, affix= "none")
+        adapter = ontoweaver.tabular.extract_all(df=preprocessed_cna_df, config=conf,separator = None, affix= "none")
 
         nodes += adapter.nodes
         edges += adapter.edges
